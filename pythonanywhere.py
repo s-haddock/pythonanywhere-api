@@ -5,7 +5,6 @@ class PythonAnywhere(object):
 	def __init__(self):
 		self.login_url = 'https://www.pythonanywhere.com/login/'
 		self.logout_url	= 'https://www.pythonanywhere.com/logout/'
-		self.files_url = 'https://www.pythonanywhere.com/user/tfndevelopment/files/'
 		self.session = requests.Session()
 		self.load_config()
 		self.login()
@@ -43,7 +42,7 @@ class PythonAnywhere(object):
 		self.session.post(self.logout_url, headers=self.headers)
 
 	def upload_file(self, local_path, server_path):
-		url = self.files_url + server_path	
+		url = self.config['files_url'] + server_path	
 		self.set_headers(url)
 		files = {'file': open(local_path, 'rb')}
 		payload = {
@@ -54,7 +53,7 @@ class PythonAnywhere(object):
 		r.raise_for_status()
 
 	def download_file(self, local_path, server_path):
-		url = self.files_url + server_path
+		url = self.config['files_url'] + server_path
 		self.set_headers(url)
 		r = self.session.get(url)
 		with open(local_path, 'wb') as data_file:
@@ -62,7 +61,7 @@ class PythonAnywhere(object):
 		r.raise_for_status()
 
 	def delete_file(self, server_path):
-		url = self.files_url + server_path	
+		url = self.config['files_url'] + server_path	
 		self.set_headers(url)
 		payload = {
 			'csrfmiddlewaretoken': self.get_csrf_token('/'.join(url.split('/')[:-1])),
@@ -72,8 +71,8 @@ class PythonAnywhere(object):
 		r.raise_for_status()
 
 	def copy_file(self, current_path, future_path):
-		current_url = self.files_url + current_path
-		future_url = self.files_url + future_path
+		current_url = self.config['files_url'] + current_path
+		future_url = self.config['files_url'] + future_path
 		self.set_headers(current_url)
 		r = self.session.get(current_url)
 		r.raise_for_status()
@@ -87,7 +86,7 @@ class PythonAnywhere(object):
 		r.raise_for_status()
 
 	def list_dir(self, server_path):
-		url = self.files_url + server_path
+		url = self.config['files_url'] + server_path
 		self.set_headers(url)
 		r = self.session.get(url)
 		soup = BeautifulSoup(r.content, 'lxml')
