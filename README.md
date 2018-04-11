@@ -1,2 +1,2 @@
 # pythonanywhere-api
-A simple API to tie into Pythonanywhere.com
+A simple requests API to tie into Pythonanywhere.com
